@@ -127,3 +127,5 @@ ynh_system_user_del_group() {
 		gpasswd -d "$username" "$group"
 	done
 }
+
+

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Webapp - Welcome (No SFTP)</title>
@@ -175,6 +175,84 @@
             color: #666;
             font-size: 0.9rem;
         }
+        
+        .sftp-info, .connection-info {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .sftp-info h3, .connection-info h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .sftp-info dl, .connection-info dl {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .sftp-info dt, .connection-info dt {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .sftp-info dd, .connection-info dd {
+            margin: 0;
+            color: #6c757d;
+        }
+        
+        .password-note, .connection-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 15px;
+            color: #856404;
+            font-size: 0.9em;
+        }
+        
+        .password-note i, .connection-note i {
+            margin-right: 8px;
+        }
+        
+        .generated-password-info {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .generated-password-info h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .generated-password-info p {
+            margin: 8px 0;
+            color: #2e7d32;
+        }
+        
+        .generated-password-info code {
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .small-note {
+            font-size: 0.85em;
+            opacity: 0.8;
+            font-style: italic;
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -190,8 +268,8 @@
             }
         }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
         <div class="logo">
             <i class="fas fa-globe"></i>
@@ -233,15 +311,36 @@
             </p>
         </div>
 
-        <div class="info-box">
-            <h3><i class="fas fa-info-circle"></i> Getting Started</h3>
-            <ul>
-                <li>Upload files using SSH/SCP or other methods</li>
-                <li>Place your content in the www/ directory</li>
-                <li>Customize error pages and routing modes</li>
-                <li>Configure PHP version and database if needed</li>
-            </ul>
-        </div>
+                       <div class="info-box">
+                   <h3><i class="fas fa-info-circle"></i> Getting Started</h3>
+                   <ul>
+                       <li>Upload files using SSH/SCP or other methods</li>
+                       <li>Place your content in the www/ directory</li>
+                       <li>Customize error pages and routing modes</li>
+                       <li>Configure PHP version and database if needed</li>
+                   </ul>
+               </div>
+               
+               <div class="connection-info">
+                   <h3><i class="fas fa-server"></i> Alternative Connection Methods</h3>
+                   <dl>
+                       <dt>Domain</dt>
+                       <dd>__DOMAIN__</dd>
+                       <dt>SSH Port</dt>
+                       <dd>__SSH_PORT__</dd>
+                       <dt>User</dt>
+                       <dd>__ID__</dd>
+                   </dl>
+                   <p class="connection-note">
+                       <i class="fas fa-info-circle"></i> <strong>Note:</strong> SFTP is disabled. Use SSH/SCP or other file transfer methods to upload your files.
+                   </p>
+                   
+                   <div class="generated-password-info">
+                       <h4><i class="fas fa-key"></i> Generated Password (if applicable)</h4>
+                       <p><strong>Password:</strong> <code>__GENERATED_PASSWORD__</code></p>
+                       <p class="small-note">This password was automatically generated during installation. Please save it securely!</p>
+                   </div>
+               </div>
 
         <div>
             <a href="#" class="cta-button" onclick="refreshCat()">
@@ -269,5 +368,5 @@
         // Add click event to cat image
         document.getElementById('catGif').addEventListener('click', refreshCat);
     </script>
-</body>
+  </body>
 </html>

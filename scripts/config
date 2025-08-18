@@ -45,16 +45,14 @@ set__password() {
 ynh_app_config_validate() {
     _ynh_app_config_validate
 
-    # If SFTP is enabled but no password provided, use current user's password
-    if [ "${changed[with_sftp]}" == "true" ] && [ $with_sftp -eq 1 ] && [ -z "$password" ]; then
-        ynh_print_info --message="No password provided for SFTP, using current user's password..."
-        password=$(whoami)
-        # Get the current user's password from PAM or use a default
-        if [ -n "$SUDO_USER" ]; then
-            # If running with sudo, try to get the original user's password
-            password="$SUDO_USER"
+            # If SFTP is enabled but no password provided, generate a random password
+        if [ "${changed[with_sftp]}" == "true" ] && [ $with_sftp -eq 1 ] && [ -z "$password" ]; then
+            ynh_print_info --message="No password provided for SFTP, generating a random password..."
+            password=$(ynh_string_random --length=12)
+            ynh_print_info --message="Generated password: $password - Please save it for SFTP access!"
+            # Store the generated password for post-install display
+            ynh_app_setting_set --app=$app --key=generated_password --value="$password"
         fi
-    fi
 
     # Ensure mode has a default value
     if [ -z "${mode:-}" ]; then
@@ -106,12 +104,12 @@ ynh_app_config_apply() {
     then
         ynh_system_user_add_group --username=$app --groups="sftp.app"
 
-        # If no password provided, use current user's password
+        # If no password provided, generate a random password
         if [ -z "$password" ]; then
-            password=$(whoami)
-            if [ -n "$SUDO_USER" ]; then
-                password="$SUDO_USER"
-            fi
+            password=$(ynh_string_random --length=12)
+            ynh_print_info --message="Generated password: $password - Please save it for SFTP access!"
+            # Store the generated password for post-install display
+            ynh_app_setting_set --app=$app --key=generated_password --value="$password"
         fi
         
         chpasswd <<< "${app}:${password}"
