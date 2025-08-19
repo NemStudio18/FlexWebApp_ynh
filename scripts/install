@@ -93,10 +93,14 @@ ynh_add_nginx_config
 # Add the routing mode configuration
 ynh_add_config --template="$mode.conf" --destination="$nginx_extra_conf_dir/$mode.conf"
 
-# Store the mode setting
-ynh_app_setting_set --app=$app --key=mode --value="$mode"
-
-ynh_add_config --template="example-custom-nginx-config.conf" --destination="$nginx_extra_conf_dir/sample.conf"
+        # Store the mode setting
+        ynh_app_setting_set --app=$app --key=mode --value="$mode"
+        
+        ynh_add_config --template="example-custom-nginx-config.conf" --destination="$nginx_extra_conf_dir/sample.conf"
+        
+        # Replace __SSH_PORT__ in POST_INSTALL files
+        ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL.md"
+        ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL_fr.md"
 
 #=================================================
 # CREATE DEDICATED USER

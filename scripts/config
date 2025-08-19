@@ -260,6 +260,11 @@ ynh_app_config_apply() {
     then
         ynh_add_fpm_config --phpversion=$phpversion
     fi
+    
+    # Replace __SSH_PORT__ in POST_INSTALL files
+    ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
+    ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL.md"
+    ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL_fr.md"
 }
 
 ynh_app_config_run $1
