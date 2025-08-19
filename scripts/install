@@ -16,7 +16,7 @@ source /usr/share/yunohost/helpers
 password=$YNH_APP_ARG_PASSWORD
 app_nb=$YNH_APP_INSTANCE_NUMBER
 mode=$YNH_APP_ARG_MODE
-ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}')
+ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -177,7 +177,6 @@ fi
         ynh_add_config --template="../sources/www/connection_info_fr.txt" --destination="$install_dir/www/connection_info_fr.txt"
         
         # Initialize variables for connection info files (GLOBAL for ynh_replace_vars)
-        ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
         
         # Ensure all required variables are defined for ynh_replace_vars
         # These variables are normally set by YunoHost, but we need to ensure they exist
