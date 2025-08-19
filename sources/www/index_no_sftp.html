@@ -343,6 +343,25 @@
                        <p class="small-note">If no password was provided during installation, a random password was generated and displayed in the installation logs. Please check your installation logs for this password.</p>
                    </div>
                </div>
+               
+               <div class="db-info">
+                   <h3><i class="fas fa-database"></i> Database Connection Details</h3>
+                   <dl>
+                       <dt>Database</dt>
+                       <dd>__DB_NAME__</dd>
+                       <dt>Username</dt>
+                       <dd>__DB_USER__</dd>
+                       <dt>Password</dt>
+                       <dd><code>__DB_PWD__</code></dd>
+                       <dt>Host</dt>
+                       <dd>localhost</dd>
+                       <dt>Port</dt>
+                       <dd>3306</dd>
+                   </dl>
+                   <p class="db-note">
+                       <i class="fas fa-info-circle"></i> <strong>Note:</strong> Database credentials are automatically generated during installation. Keep them secure for your application configuration.
+                   </p>
+               </div>
 
         <div>
             <a href="#" class="cta-button" onclick="refreshCat()">

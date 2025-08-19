@@ -160,7 +160,7 @@
             font-size: 0.9rem;
         }
         
-        .sftp-info, .connection-info {
+        .sftp-info, .connection-info, .db-info {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 8px;
@@ -168,29 +168,29 @@
             margin: 20px 0;
         }
         
-        .sftp-info h3, .connection-info h3 {
+        .sftp-info h3, .connection-info h3, .db-info h3 {
             color: #495057;
             margin-bottom: 15px;
         }
         
-        .sftp-info dl, .connection-info dl {
+        .sftp-info dl, .connection-info dl, .db-info dl {
             display: grid;
             grid-template-columns: 80px 1fr;
             gap: 10px;
             margin: 15px 0;
         }
         
-        .sftp-info dt, .connection-info dt {
+        .sftp-info dt, .connection-info dt, .db-info dt {
             font-weight: bold;
             color: #495057;
         }
         
-        .sftp-info dd, .connection-info dd {
+        .sftp-info dd, .connection-info dd, .db-info dd {
             margin: 0;
             color: #6c757d;
         }
         
-        .password-note, .connection-note {
+        .password-note, .connection-note, .db-note {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
             border-radius: 6px;
@@ -200,7 +200,7 @@
             font-size: 0.9em;
         }
         
-        .password-note i, .connection-note i {
+        .password-note i, .connection-note i, .db-note i {
             margin-right: 8px;
         }
         
@@ -321,6 +321,25 @@
                        <p><strong>Password:</strong> <code>Check installation logs</code></p>
                        <p class="small-note">If no password was provided during installation, a random password was generated and displayed in the installation logs. Please check your installation logs for this password.</p>
                    </div>
+               </div>
+               
+               <div class="db-info">
+                   <h3><i class="fas fa-database"></i> Database Connection Details</h3>
+                   <dl>
+                       <dt>Database</dt>
+                       <dd>__DB_NAME__</dd>
+                       <dt>Username</dt>
+                       <dd>__DB_USER__</dd>
+                       <dt>Password</dt>
+                       <dd><code>__DB_PWD__</code></dd>
+                       <dt>Host</dt>
+                       <dd>localhost</dd>
+                       <dt>Port</dt>
+                       <dd>3306</dd>
+                   </dl>
+                   <p class="db-note">
+                       <i class="fas fa-info-circle"></i> <strong>Note:</strong> Database credentials are automatically generated during installation. Keep them secure for your application configuration.
+                   </p>
                </div>
 
         <div>
