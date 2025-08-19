@@ -184,6 +184,21 @@ ynh_app_config_apply() {
          local current_date=$(date '+%Y-%m-%d %H:%M:%S')
          local ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
          
+         # Ensure all required variables are defined for ynh_replace_vars
+         # These variables are normally set by YunoHost, but we need to ensure they exist
+         if [ -z "${domain:-}" ]; then
+             domain=$(ynh_app_setting_get --app=$app --key=domain 2>/dev/null || echo "unknown")
+         fi
+         if [ -z "${path:-}" ]; then
+             path=$(ynh_app_setting_get --app=$app --key=path 2>/dev/null || echo "/")
+         fi
+         if [ -z "${app:-}" ]; then
+             app=$(ynh_app_setting_get --app=$app --key=app 2>/dev/null || echo "my_webapp")
+         fi
+         if [ -z "${install_dir:-}" ]; then
+             install_dir="/var/www/$app"
+         fi
+         
          # Replace variables in connection info files
          ynh_replace_string --match_string="__DATE__" --replace_string="$current_date" --target_file="$install_dir/www/connection_info.txt"
          ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$install_dir/www/connection_info.txt"
