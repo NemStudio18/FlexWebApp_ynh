@@ -1,56 +1,233 @@
 test_format = 1.0
 
 [default]
-
     # -------------------------------
-    # Default args to use for install
+    # Configuration par défaut (static + SFTP + PHP 8.4 + pas de BDD)
     # -------------------------------
-
     args.with_sftp = "1"
     args.custom_error_file = "0"
     args.password = "SuperDuper_StrongPassw0rd"
     args.database = "none"
-    args.phpversion = "8.3"
+    args.phpversion = "8.4"
+    args.mode = "static"
+    args.path = "/"
+    
+    # Test de mise à jour depuis une version précédente
     test_upgrade_from.bf5d3ed.name = "1.0~ynh14"
-    test_upgrade_from.bf5d3ed.args.with_mysql = "0"
+    test_upgrade_from.bf5d3ed.args.with_sftp = "1"
+    test_upgrade_from.bf5d3ed.args.custom_error_file = "0"
     test_upgrade_from.bf5d3ed.args.domain = "sub.domain.tld"
     test_upgrade_from.bf5d3ed.args.path = "/"
     test_upgrade_from.bf5d3ed.args.password = "SuperDuper_StrongPassw0rd"
+    test_upgrade_from.bf5d3ed.args.database = "none"
+    test_upgrade_from.bf5d3ed.args.phpversion = "8.3"
 
-[83_test]
+# ==========================================
+# TESTS DES VERSIONS PHP
+# ==========================================
 
-    only = ["install.subdir", "backup_restore", "upgrade" ]
+[php80_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.0"
+
+[php81_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.1"
+
+[php82_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.2"
+
+[php83_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
     args.phpversion = "8.3"
 
-[84_test]
-
-    only = ["install.subdir", "backup_restore", "upgrade" ]
+[php84_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
     args.phpversion = "8.4"
 
-[none_test]
-
+[php_none_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
     args.phpversion = "none"
 
-[mysql_test]
+# ==========================================
+# TESTS DES BASES DE DONNÉES
+# ==========================================
 
-    only = ["install.subdir", "backup_restore", "upgrade", "upgrade.bf5d3ed" ]
+[mysql_test]
+    only = ["install.subdir", "backup_restore", "upgrade", "upgrade.bf5d3ed"]
     args.database = "mysql"
     test_upgrade_from.bf5d3ed.name = "1.0~ynh14"
-    test_upgrade_from.bf5d3ed.args.with_mysql = "1"
+    test_upgrade_from.bf5d3ed.args.with_sftp = "1"
+    test_upgrade_from.bf5d3ed.args.custom_error_file = "0"
     test_upgrade_from.bf5d3ed.args.domain = "sub.domain.tld"
     test_upgrade_from.bf5d3ed.args.path = "/"
     test_upgrade_from.bf5d3ed.args.password = "SuperDuper_StrongPassw0rd"
+    test_upgrade_from.bf5d3ed.args.database = "mysql"
+    test_upgrade_from.bf5d3ed.args.phpversion = "8.3"
 
 [postgresql_test]
-
-    only = ["install.subdir", "backup_restore", "upgrade" ]
+    only = ["install.subdir", "backup_restore", "upgrade"]
     args.database = "postgresql"
 
-[custom_error_file_test]
+[database_none_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.database = "none"
 
+# ==========================================
+# TESTS DES MODES DE ROUTAGE
+# ==========================================
+
+[static_mode_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.mode = "static"
+
+[front_mode_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.mode = "front"
+
+[public_mode_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.mode = "public"
+
+# ==========================================
+# TESTS DES CONFIGURATIONS SFTP
+# ==========================================
+
+[sftp_enabled_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.with_sftp = "1"
+    args.password = "SuperDuper_StrongPassw0rd"
+
+[sftp_disabled_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.with_sftp = "0"
+
+[sftp_no_password_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.with_sftp = "1"
+    args.password = ""
+
+# ==========================================
+# TESTS DES PAGES D'ERREUR PERSONNALISÉES
+# ==========================================
+
+[custom_error_file_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
     args.custom_error_file = "1"
     test_upgrade_from.bf5d3ed.name = "1.0~ynh14"
-    test_upgrade_from.bf5d3ed.args.with_mysql = "0"
+    test_upgrade_from.bf5d3ed.args.with_sftp = "1"
+    test_upgrade_from.bf5d3ed.args.custom_error_file = "1"
     test_upgrade_from.bf5d3ed.args.domain = "sub.domain.tld"
     test_upgrade_from.bf5d3ed.args.path = "/"
     test_upgrade_from.bf5d3ed.args.password = "SuperDuper_StrongPassw0rd"
+    test_upgrade_from.bf5d3ed.args.database = "none"
+    test_upgrade_from.bf5d3ed.args.phpversion = "8.3"
+
+[no_custom_error_file_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.custom_error_file = "0"
+
+# ==========================================
+# TESTS DES CHEMINS D'INSTALLATION
+# ==========================================
+
+[root_path_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.path = "/"
+
+[subdir_path_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.path = "/myapp"
+
+# ==========================================
+# TESTS DES COMBINAISONS COMPLEXES
+# ==========================================
+
+[php84_mysql_front_sftp_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.4"
+    args.database = "mysql"
+    args.mode = "front"
+    args.with_sftp = "1"
+    args.password = "SuperDuper_StrongPassw0rd"
+
+[php83_postgresql_public_no_sftp_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.3"
+    args.database = "postgresql"
+    args.mode = "public"
+    args.with_sftp = "0"
+
+[php82_none_static_sftp_custom_error_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.2"
+    args.database = "none"
+    args.mode = "static"
+    args.with_sftp = "1"
+    args.password = "SuperDuper_StrongPassw0rd"
+    args.custom_error_file = "1"
+
+[php84_mysql_front_sftp_no_password_test]
+    only = ["install.subdir", "backup_restore", "upgrade"]
+    args.phpversion = "8.4"
+    args.database = "mysql"
+    args.mode = "front"
+    args.with_sftp = "1"
+    args.password = ""
+
+# ==========================================
+# TESTS DE MISE À JOUR SPÉCIFIQUES
+# ==========================================
+
+[upgrade_from_old_version_test]
+    only = ["upgrade.bf5d3ed"]
+    test_upgrade_from.bf5d3ed.name = "1.0~ynh14"
+    test_upgrade_from.bf5d3ed.args.with_sftp = "1"
+    test_upgrade_from.bf5d3ed.args.custom_error_file = "0"
+    test_upgrade_from.bf5d3ed.args.domain = "sub.domain.tld"
+    test_upgrade_from.bf5d3ed.args.path = "/"
+    test_upgrade_from.bf5d3ed.args.password = "SuperDuper_StrongPassw0rd"
+    test_upgrade_from.bf5d3ed.args.database = "none"
+    test_upgrade_from.bf5d3ed.args.phpversion = "8.3"
+
+# ==========================================
+# TESTS DE CONFIGURATION POST-INSTALLATION
+# ==========================================
+
+[config_change_mode_test]
+    only = ["install.subdir", "config"]
+    args.mode = "static"
+    # Test de changement de mode via config
+
+[config_change_php_test]
+    only = ["install.subdir", "config"]
+    args.phpversion = "8.4"
+    # Test de changement de version PHP via config
+
+[config_change_sftp_test]
+    only = ["install.subdir", "config"]
+    args.with_sftp = "1"
+    args.password = "NewPassword123!"
+    # Test de changement de configuration SFTP via config
+
+# ==========================================
+# TESTS DE SAUVEGARDE ET RESTAURATION
+# ==========================================
+
+[backup_restore_full_test]
+    only = ["install.subdir", "backup_restore"]
+    args.phpversion = "8.4"
+    args.database = "mysql"
+    args.mode = "front"
+    args.with_sftp = "1"
+    args.password = "SuperDuper_StrongPassw0rd"
+    args.custom_error_file = "1"
+
+[backup_restore_minimal_test]
+    only = ["install.subdir", "backup_restore"]
+    args.phpversion = "none"
+    args.database = "none"
+    args.mode = "static"
+    args.with_sftp = "0"
+    args.custom_error_file = "0"
