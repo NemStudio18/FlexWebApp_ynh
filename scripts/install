@@ -172,9 +172,9 @@ fi
         ynh_add_config --template="../sources/www/connection_info.txt" --destination="$install_dir/www/connection_info.txt"
         ynh_add_config --template="../sources/www/connection_info_fr.txt" --destination="$install_dir/www/connection_info_fr.txt"
         
-        # Initialize variables for connection info files
-        local current_date=$(date '+%Y-%m-%d %H:%M:%S')
-        local ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
+        # Initialize variables for connection info files (GLOBAL for ynh_replace_vars)
+        current_date=$(date '+%Y-%m-%d %H:%M:%S')
+        ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}' || echo "22")
         
         # Ensure all required variables are defined for ynh_replace_vars
         # These variables are normally set by YunoHost, but we need to ensure they exist
