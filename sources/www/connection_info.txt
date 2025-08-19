@@ -29,6 +29,5 @@ Public Directory: __INSTALL_DIR__/www/public/ (if using public mode)
 - SFTP access requires the "sftp.app" group permission
 
 ==========================================
-Generated on: __DATE__
 YunoHost App: __ID__
 ==========================================
