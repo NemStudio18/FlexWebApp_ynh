@@ -273,13 +273,7 @@ chmod 750 "$install_dir"
 
 ynh_maintenance_mode_OFF
 
-#=================================================
-# UPDATE POST_INSTALL FILES
-#=================================================
 
-# Replace __SSH_PORT__ in POST_INSTALL files
-ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL.md"
-ynh_replace_string --match_string="__SSH_PORT__" --replace_string="$ssh_port" --target_file="../doc/POST_INSTALL_fr.md"
 
 #=================================================
 # END OF SCRIPT
