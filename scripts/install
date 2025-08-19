@@ -90,8 +90,16 @@ fi
 # Create a dedicated NGINX config
 ynh_add_nginx_config
 
-# Add the routing mode configuration
-ynh_add_config --template="$mode.conf" --destination="$nginx_extra_conf_dir/$mode.conf"
+# Replace __MODE__ in the main nginx.conf
+ynh_replace_string --match_string="__MODE__" --replace_string="$mode" --target_file="$nginx_extra_conf_dir/nginx.conf"
+
+# Add common configuration (always needed)
+ynh_add_config --template="common.conf" --destination="$nginx_extra_conf_dir/common.conf"
+
+# Add the routing mode configuration (only for non-static modes)
+if [ "$mode" != "static" ]; then
+    ynh_add_config --template="$mode.conf" --destination="$nginx_extra_conf_dir/$mode.conf"
+fi
 
         # Store the mode setting
         ynh_app_setting_set --app=$app --key=mode --value="$mode"
