@@ -132,34 +132,80 @@ fi
 # MODIFY A CONFIG FILE
 #=================================================
 
-mkdir -p "$install_dir/www"
+        mkdir -p "$install_dir/www"
+        
+        # Create public directory if using public mode
+        if [ "$mode" = "public" ]; then
+            mkdir -p "$install_dir/www/public"
+        fi
 
-# Copy source files based on mode and SFTP settings
-if [ $with_sftp -eq 1 ]
-then
-    if [ "$mode" = "front" ]
-    then
-        ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-    elif [ "$mode" = "public" ]
-    then
-        ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
-    else
-        # static mode
-        ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
-    fi
-else
-    # No SFTP - use no_sftp version for static mode, or PHP versions for other modes
-    if [ "$mode" = "front" ]
-    then
-        ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-    elif [ "$mode" = "public" ]
-    then
-        ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
-    else
-        # static mode without SFTP
-        ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
-    fi
-fi
+        # Copy source files based on mode and SFTP settings
+        if [ $with_sftp -eq 1 ]
+        then
+            if [ "$mode" = "front" ]
+            then
+                ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+            elif [ "$mode" = "public" ]
+            then
+                # In public mode, index.php goes in the public directory
+                ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/public/index.php"
+            else
+                # static mode
+                ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
+            fi
+        else
+            # No SFTP - use no_sftp version for static mode, or PHP versions for other modes
+            if [ "$mode" = "front" ]
+            then
+                ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+            elif [ "$mode" = "public" ]
+            then
+                # In public mode, index.php goes in the public directory
+                ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/public/index.php"
+            else
+                # static mode without SFTP
+                ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+            fi
+        fi
+        
+        # Copy connection info files
+        ynh_add_config --template="../sources/www/connection_info.txt" --destination="$install_dir/www/connection_info.txt"
+        ynh_add_config --template="../sources/www/connection_info_fr.txt" --destination="$install_dir/www/connection_info_fr.txt"
+        
+        # Replace __PASSWORD__ in ALL source files
+        if [ -n "$password" ]; then
+            # Connection info files
+            ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/connection_info.txt"
+            ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/connection_info_fr.txt"
+            
+            # Source files (HTML/PHP)
+            if [ -f "$install_dir/www/index.html" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/index.html"
+            fi
+            if [ -f "$install_dir/www/index.php" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/index.php"
+            fi
+            # Check for public mode index.php
+            if [ "$mode" = "public" ] && [ -f "$install_dir/www/public/index.php" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/public/index.php"
+            fi
+        else
+            # Connection info files
+            ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/connection_info.txt"
+            ynh_replace_string --match_string="__PASSWORD__" --replace_string="(Aucun mot de passe défini)" --target_file="$install_dir/www/connection_info_fr.txt"
+            
+            # Source files (HTML/PHP)
+            if [ -f "$install_dir/www/index.php" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/index.php"
+            fi
+            if [ -f "$install_dir/www/index.html" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/index.html"
+            fi
+            # Check for public mode index.php
+            if [ "$mode" = "public" ] && [ -f "$install_dir/www/public/index.php" ]; then
+                ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/public/index.php"
+            fi
+        fi
 
 chown -R $app:www-data "$install_dir"
 # Home directory of the user needs to be owned by root to allow

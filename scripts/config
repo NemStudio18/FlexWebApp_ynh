@@ -156,22 +156,64 @@ ynh_app_config_apply() {
         # Store the mode setting
         ynh_app_setting_set --app=$app --key=mode --value="$mode"
         
-        # Update source files based on new mode
-        if [ "$mode" = "front" ]
-        then
-            ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-        elif [ "$mode" = "public" ]
-        then
-            ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
-        else
-            # static mode
-            if [ $with_sftp -eq 1 ]
-            then
-                ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
-            else
-                ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
-            fi
-        fi
+                 # Update source files based on new mode
+         if [ "$mode" = "front" ]
+         then
+             ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+         elif [ "$mode" = "public" ]
+         then
+             # In public mode, index.php goes in the public directory
+             ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/public/index.php"
+             # Ensure public directory exists
+             mkdir -p "$install_dir/www/public"
+         else
+             # static mode
+             if [ $with_sftp -eq 1 ]
+             then
+                 ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
+             else
+                 ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+             fi
+         fi
+         
+         # Update connection info files
+         ynh_add_config --template="../sources/www/connection_info.txt" --destination="$install_dir/www/connection_info.txt"
+         ynh_add_config --template="../sources/www/connection_info_fr.txt" --destination="$install_dir/www/connection_info_fr.txt"
+         
+         # Replace __PASSWORD__ in ALL source files
+         if [ -n "$password" ]; then
+             # Connection info files
+             ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/connection_info.txt"
+             ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/connection_info_fr.txt"
+             
+             # Source files (HTML/PHP)
+             if [ -f "$install_dir/www/index.html" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/index.html"
+             fi
+             if [ -f "$install_dir/www/index.php" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/index.php"
+             fi
+             # Check for public mode index.php
+             if [ "$mode" = "public" ] && [ -f "$install_dir/www/public/index.php" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="$password" --target_file="$install_dir/www/public/index.php"
+             fi
+         else
+             # Connection info files
+             ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/connection_info.txt"
+             ynh_replace_string --match_string="__PASSWORD__" --replace_string="(Aucun mot de passe défini)" --target_file="$install_dir/www/connection_info_fr.txt"
+             
+             # Source files (HTML/PHP)
+             if [ -f "$install_dir/www/index.php" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/index.php"
+             fi
+             if [ -f "$install_dir/www/index.html" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/index.html"
+             fi
+             # Check for public mode index.php
+             if [ "$mode" = "public" ] && [ -f "$install_dir/www/public/index.php" ]; then
+                 ynh_replace_string --match_string="__PASSWORD__" --replace_string="(No password set)" --target_file="$install_dir/www/public/index.php"
+             fi
+         fi
         
         ynh_systemd_action --service_name=nginx --action=reload
     else

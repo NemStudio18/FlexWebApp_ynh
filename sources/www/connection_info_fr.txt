@@ -1,0 +1,53 @@
+==========================================
+    MY WEBAPP - INFORMATIONS DE CONNEXION
+==========================================
+
+🌐 ACCÈS À L'APPLICATION
+=========================
+URL: https://__DOMAIN____PATH__
+Domaine: __DOMAIN__
+Chemin: __PATH__
+
+🔑 DÉTAILS DE CONNEXION SFTP
+============================
+Hôte: __DOMAIN__
+Port: __SSH_PORT__
+Nom d'utilisateur: __ID__
+Mot de passe: __PASSWORD__
+
+📁 STRUCTURE DES RÉPERTOIRES
+============================
+Répertoire d'installation: __INSTALL_DIR__
+Répertoire web: __INSTALL_DIR__/www/
+Répertoire public: __INSTALL_DIR__/www/public/ (si mode public)
+
+🚀 POUR COMMENCER
+==================
+1. Connectez-vous via SFTP en utilisant les identifiants ci-dessus
+2. Uploadez vos fichiers dans le répertoire www/
+3. Votre application sera accessible à l'URL ci-dessus
+
+⚠️  NOTES IMPORTANTES
+======================
+- Si aucun mot de passe n'a été fourni lors de l'installation, un mot de passe aléatoire a été généré
+- Consultez vos logs d'installation pour le mot de passe généré
+- Sauvegardez votre mot de passe en lieu sûr - il ne peut pas être récupéré ultérieurement
+- L'accès SFTP nécessite la permission du groupe "sftp.app"
+
+🔧 MÉTHODES DE CONNEXION ALTERNATIVES
+======================================
+Si SFTP est désactivé, vous pouvez utiliser :
+- SSH/SCP pour le transfert de fichiers
+- Gestionnaire de fichiers web (si disponible)
+- Upload direct de fichiers via votre panneau d'hébergement
+
+📞 BESOIN D'AIDE ?
+===================
+- Consultez la description de l'application pour des informations détaillées
+- Visitez la Communauté YunoHost : https://forum.yunohost.org/
+- Consultez vos logs d'installation pour tout message d'erreur
+
+==========================================
+Généré le : __DATE__
+Application YunoHost : __ID__
+==========================================

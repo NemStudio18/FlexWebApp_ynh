@@ -360,8 +360,8 @@ $timestamp = time();
                        <dd>__SSH_PORT__</dd>
                        <dt>User</dt>
                        <dd>__ID__</dd>
-                       <dt>Password</dt>
-                       <dd><i>the one you set at installation</i></dd>
+                                               <dt>Password</dt>
+                        <dd><code>__PASSWORD__</code></dd>
                    </dl>
                    <p class="password-note">
                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> If no password was provided during installation and you chose SFTP access, a random password was generated and displayed during installation. Please check your installation logs for this password.
@@ -369,8 +369,8 @@ $timestamp = time();
                    
                    <div class="generated-password-info">
                        <h4><i class="fas fa-key"></i> Generated Password (if applicable)</h4>
-                       <p><strong>Password:</strong> <code>__GENERATED_PASSWORD__</code></p>
-                       <p class="small-note">This password was automatically generated during installation. Please save it securely!</p>
+                       <p><strong>Password:</strong> <code>Check installation logs</code></p>
+                       <p class="small-note">If no password was provided during installation, a random password was generated and displayed in the installation logs. Please check your installation logs for this password.</p>
                    </div>
                </div>
 
