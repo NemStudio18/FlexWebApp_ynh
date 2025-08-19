@@ -158,9 +158,6 @@ ynh_app_config_apply() {
             ynh_add_config --template="$mode.conf" --destination="$nginx_extra_conf_dir/$mode.conf"
         fi
         
-        # Replace __MODE__ in the main nginx.conf (AFTER copying all config files)
-        ynh_replace_string --match_string="__MODE__" --replace_string="$mode" --target_file="$nginx_extra_conf_dir/nginx.conf"
-        
         # Store the mode setting
         ynh_app_setting_set --app=$app --key=mode --value="$mode"
         
