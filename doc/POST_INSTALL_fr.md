@@ -15,6 +15,20 @@ Votre application **My Webapp** a été installée et est maintenant prête à l
 - Veuillez sauvegarder ce mot de passe en lieu sûr - il ne peut pas être récupéré ultérieurement !
 - **Port SSH :** Port SSH standard (généralement 22) - vérifiez la configuration de votre serveur si différent
 
+## 🗄️ **Informations de Base de Données**
+
+### **Détails de Connexion MySQL :**
+- **Nom de la Base :** `__DB_NAME__`
+- **Nom d'utilisateur :** `__DB_USER__`
+- **Mot de passe :** `__DB_PWD__`
+- **Hôte :** `localhost`
+- **Port :** `3306`
+
+### **Notes Importantes :**
+- Les identifiants de base de données sont automatiquement générés lors de l'installation
+- Conservez ces identifiants en lieu sûr pour la configuration de votre application
+- Vous pouvez changer le mot de passe de la base de données via le panneau d'administration YunoHost
+
 ## 🚀 **Pour Commencer**
 
 1. **Connectez-vous via SFTP** en utilisant les identifiants ci-dessus

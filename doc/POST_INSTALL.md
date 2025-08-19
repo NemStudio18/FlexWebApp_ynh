@@ -15,6 +15,20 @@ Your **My Webapp** application has been installed and is now ready to use!
 - Please save this password securely - it cannot be recovered later!
 - **SSH Port:** Standard SSH port (usually 22) - check your server configuration if different
 
+## 🗄️ **Database Information**
+
+### **MySQL Connection Details:**
+- **Database Name:** `__DB_NAME__`
+- **Username:** `__DB_USER__`
+- **Password:** `__DB_PWD__`
+- **Host:** `localhost`
+- **Port:** `3306`
+
+### **Important Notes:**
+- Database credentials are automatically generated during installation
+- Keep these credentials secure for your application configuration
+- You can change the database password through the YunoHost admin panel
+
 ## 🚀 **Getting Started**
 
 1. **Connect via SFTP** using the credentials above
