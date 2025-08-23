@@ -67,6 +67,24 @@ if [ -z "${mode:-}" ]; then
     mode=$(ynh_app_setting_get --app=$app --key=mode 2>/dev/null || echo "static")
 fi
 
+#=================================================
+# GIT SYNC SETTINGS
+#=================================================
+use_git_sync=$(ynh_app_setting_get --app=$app --key=use_git_sync --default=0)
+git_url=$(ynh_app_setting_get --app=$app --key=git_url)
+cron_frequency=$(ynh_app_setting_get --app=$app --key=cron_frequency)
+
+if [ "$use_git_sync" = "1" ]; then
+    # Re-install git if it was removed
+    ynh_install_app_dependencies git
+
+    # Update the cron job
+    (crontab -l -u $app 2>/dev/null | grep -v "sync_git.sh" ; echo "$cron_frequency $install_dir/../sync_git.sh") | crontab -u $app -
+else
+    # Remove the cron job if it exists
+    (crontab -l -u $app 2>/dev/null | grep -v "sync_git.sh") | crontab -u $app -
+fi
+
 # Get mode from arguments if not set
 if [ -z "${mode:-}" ]; then
     mode=$YNH_APP_ARG_MODE
@@ -121,20 +139,29 @@ ynh_add_config --template="$mode.conf" --destination="$nginx_extra_conf_dir/$mod
 # Store the mode setting
 ynh_app_setting_set --app=$app --key=mode --value="$mode"
 
-# Ensure source files match the current mode
-if [ "$mode" = "front" ]
-then
-    ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-elif [ "$mode" = "public" ]
-then
-    ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
+# Handle source files
+if [ "$use_git_sync" = "1" ]; then
+    # If git sync is enabled, but the directory is empty, clone the repo
+    if [ ! -d "$install_dir/www/.git" ]; then
+        rm -rf "$install_dir/www"
+        ynh_exec_as $app git clone "$git_url" "$install_dir/www"
+    fi
 else
-    # static mode
-    if [ $with_sftp -eq 1 ]
+    # Ensure source files match the current mode
+    if [ "$mode" = "front" ]
     then
-        ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
+        ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+    elif [ "$mode" = "public" ]
+    then
+        ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
     else
-        ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+        # static mode
+        if [ $with_sftp -eq 1 ]
+        then
+            ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
+        else
+            ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+        fi
     fi
 fi
 

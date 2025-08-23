@@ -30,6 +30,15 @@ if [ $database != "none" ]; then
 fi
 
 #=================================================
+# REMOVE CRON JOB
+#=================================================
+use_git_sync=$(ynh_app_setting_get --app=$app --key=use_git_sync --default=0)
+if [ "$use_git_sync" = "1" ]; then
+    ynh_script_progression --message="Removing git sync cron job..." --weight=1
+    (crontab -l -u $app 2>/dev/null | grep -v "sync_git.sh") | crontab -u $app -
+fi
+
+#=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing NGINX web server configuration..." --weight=2

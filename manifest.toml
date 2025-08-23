@@ -76,6 +76,30 @@ ram.runtime = "50M"
     default = false
     help = "Once custom error enabled, you can add/create a custom `404.html` file in a directory `www/error`."
 
+    [install.use_git_sync]
+    ask.en = "Do you want to sync the app from a git repository?"
+    ask.fr = "Voulez-vous synchroniser l'application depuis un dépôt git ?"
+    type = "boolean"
+    default = false
+
+    [install.git_url]
+    ask.en = "Git repository URL"
+    ask.fr = "URL du dépôt git"
+    type = "string"
+    optional = true
+    help.en = "The URL of the git repository to sync from."
+    help.fr = "L'URL du dépôt git à partir duquel synchroniser."
+
+    [install.cron_frequency]
+    ask.en = "Cron job frequency"
+    ask.fr = "Fréquence de la tâche cron"
+    type = "select"
+    choices = [ "*/5 * * * *", "*/15 * * * *", "0 * * * *", "0 0 * * *" ]
+    default = "0 * * * *"
+    optional = true
+    help.en = "The frequency at which the git repository should be synced."
+    help.fr = "La fréquence à laquelle le dépôt git doit être synchronisé."
+
 [resources]
     [resources.system_user]
 

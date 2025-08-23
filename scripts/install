@@ -17,6 +17,9 @@ password=$YNH_APP_ARG_PASSWORD
 app_nb=$YNH_APP_INSTANCE_NUMBER
 mode=$YNH_APP_ARG_MODE
 ssh_port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}')
+use_git_sync=$YNH_APP_ARG_USE_GIT_SYNC
+git_url=$YNH_APP_ARG_GIT_URL
+cron_frequency=$YNH_APP_ARG_CRON_FREQUENCY
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -136,30 +139,46 @@ fi
 
 mkdir -p "$install_dir/www"
 
-# Copy source files based on mode and SFTP settings
-if [ $with_sftp -eq 1 ]
-then
-    if [ "$mode" = "front" ]
-    then
-        ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-    elif [ "$mode" = "public" ]
-    then
-        ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
-    else
-        # static mode
-        ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
-    fi
+if [ "$use_git_sync" = "1" ]; then
+    ynh_script_progression --message="Setting up git sync..." --weight=2
+
+    # Install git
+    ynh_install_app_dependencies git
+
+    # Remove placeholder files
+    rm -rf "$install_dir/www"
+
+    # Clone the repository
+    ynh_exec_as $app git clone "$git_url" "$install_dir/www"
+
+    # Create the cron job
+    (crontab -l -u $app 2>/dev/null; echo "$cron_frequency $install_dir/../sync_git.sh") | crontab -u $app -
 else
-    # No SFTP - use no_sftp version for static mode, or PHP versions for other modes
-    if [ "$mode" = "front" ]
+    # Copy source files based on mode and SFTP settings
+    if [ $with_sftp -eq 1 ]
     then
-        ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
-    elif [ "$mode" = "public" ]
-    then
-        ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
+        if [ "$mode" = "front" ]
+        then
+            ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+        elif [ "$mode" = "public" ]
+        then
+            ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
+        else
+            # static mode
+            ynh_add_config --template="../sources/www/index.html" --destination="$install_dir/www/index.html"
+        fi
     else
-        # static mode without SFTP
-        ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+        # No SFTP - use no_sftp version for static mode, or PHP versions for other modes
+        if [ "$mode" = "front" ]
+        then
+            ynh_add_config --template="../sources/www/index_front.php" --destination="$install_dir/www/index.php"
+        elif [ "$mode" = "public" ]
+        then
+            ynh_add_config --template="../sources/www/index_public.php" --destination="$install_dir/www/index.php"
+        else
+            # static mode without SFTP
+            ynh_add_config --template="../sources/www/index_no_sftp.html" --destination="$install_dir/www/index.html"
+        fi
     fi
 fi
 
